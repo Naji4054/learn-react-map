@@ -1,0 +1,30 @@
+.container {
+    max-width:1200px;
+    margin:0 auto;
+}
+
+.title {
+    color:red;
+}
+
+.price {
+     color:yellow;
+}
+
+.image {
+    max-width:300px;
+    min-height: 300px;
+
+}
+
+.image img {
+    width:100%
+}
+.pCards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 80px;
+}
+.card {
+    box-shadow: 10px 9px 13px 4px whitesmoke;
+}
