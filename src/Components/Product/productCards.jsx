@@ -1,6 +1,6 @@
 import "./Product.css";
 const ProductCards = (props) => {
-    const data =props.data
+    const data =props.data  // data from product.jsx
     console.log(props)
     return (
         <>
