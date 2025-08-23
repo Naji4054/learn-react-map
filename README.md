@@ -132,6 +132,13 @@ __duration__: Controls scroll speed (higher = slower, lower = faster).
 
 Works on desktop and mobile out of the box.
 
+## 👨‍💻 Authors
+
+- **Muhammed Naji** - *Initial work & development*  
+  [GitHub Profile](https://github.com/Naji4054)  
+
+---
+
 ## Acknowledgments  
 
 - [Lenis](https://www.npmjs.com/package/lenis) – Smooth scrolling library (installed via **npm** as the CDN version is deprecated)  
