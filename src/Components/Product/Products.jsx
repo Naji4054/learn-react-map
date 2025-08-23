@@ -5,10 +5,15 @@ const Products =()=>{
 
     return (
         <>
+        <div className="heading">
+            <h1>Smooth Scroll</h1>
+            <p>created using lenis librabry</p>
+        </div>
         <div className="pCards container">
         {
-           
-           ProductData.map((item )=> <ProductCards key = {item.id} data={item}/>)
+           // map the objects from ProductData 
+           // call the productCards inside the map
+           ProductData.map((item )=> <ProductCards key = {item.id} data={item}/>) //store item in a key variable called data  
        }
         </div>
         

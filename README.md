@@ -1,70 +1,139 @@
-# Getting Started with Create React App
+# Smooth Scrolling in React using Lenis
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a simple React application that displays products from the [FakeStore API](https://fakestoreapi.com/).  
+We use the **Lenis** library to add a smooth scrolling experience throughout the app.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 📂 Project Structure
 
-### `npm start`
+- **data.js** → Contains an array of products fetched from FakeStore API.
+- **Product.jsx** → Main file where mapping of products happens.
+- **ProductCard.jsx** → Card component to display individual products.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🚀 About Lenis
 
-### `npm test`
+Lenis is a lightweight library designed to provide a **smooth and customizable scrolling experience**.  
+It works for both **mouse wheel** and **touch devices**, giving your app a modern, polished feel.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+✨ Key Features:
+- Smooth scrolling for mouse wheel and touch devices  
+- Configurable speed (`duration`) and smoothness (`lerp`)  
+- Lightweight and easy to integrate  
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## ⚙️ Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Inside your React project directory, install **Lenis**:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`npm install lenis`
 
-### `npm run eject`
+🛠️ Setup Guide
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1️⃣ __Create a Lenis Provider Component__
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Create a file named ScrollSmooth.jsx or any name inside src/Components/ui/ and paste the following code:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+import React, { createContext, useContext, useEffect, useRef } from 'react';
+import Lenis from 'lenis';
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+const LenisContext = createContext();
 
-### Code Splitting
+const LenisProvider = ({ children }) => {
+  const lenisRef = useRef(null);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const lenis = new Lenis({
+        lerp: 0.1,        // Lower = smoother/slower scroll
+        duration: 2,      // Higher = slower scroll, Lower = faster scroll
+        smoothTouch: true,
+        smoothWheel: true,
+      });
 
-### Analyzing the Bundle Size
+      lenisRef.current = lenis;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
 
-### Making a Progressive Web App
+      requestAnimationFrame(raf);
+    }
+  }, []);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  return (
+    <LenisContext.Provider value={lenisRef.current}>
+      {children}
+    </LenisContext.Provider>
+  );
+};
 
-### Advanced Configuration
+export const useLenis = () => useContext(LenisContext);
+export default LenisProvider;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```
 
-### Deployment
+2️⃣ __Wrap Your Root Component__
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Open index.js which is the entry point of your application and wrap  your root react component <App /> inside LenisProvider 
 
-### `npm run build` fails to minify
+```bash
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import LenisProvider from './Components/ui/ScrollSmooth';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <LenisProvider>
+      <App />
+    </LenisProvider>
+  </React.StrictMode>
+);
+
+reportWebVitals();
+
+```
+
+⚡ __Example Usage in This Project__
+
+data.js → contains product details from FakeStore API
+
+Product.jsx → maps and displays products
+
+ProductCard.jsx → renders each product as a card
+
+ScrollSmooth.jsx → applies smooth scrolling globally
+
+index.js → wraps the app with LenisProvider
+
+✅ Notes
+
+Always export the LenisProvider so it can be imported into index.js.
+
+You can tweak values in ScrollSmooth.jsx:
+
+__lerp__: Controls how smooth the scroll feels (lower = smoother, higher = snappier).
+
+__duration__: Controls scroll speed (higher = slower, lower = faster).
+
+Works on desktop and mobile out of the box.
+
+## Acknowledgments  
+
+- [Lenis](https://www.npmjs.com/package/lenis) – Smooth scrolling library (installed via **npm** as the CDN version is deprecated)  
+- [FakeStore API](https://fakestoreapi.com/) – Free fake API for testing and prototyping e-commerce projects  
+- [React](https://react.dev/) – Frontend library used for building the UI  
